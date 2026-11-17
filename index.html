@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuis Interaktif Bioteknologi - Eksplorasi Ilmu Hayati</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        bio: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            200: '#99f6e4',
+                            500: '#14b8a6',
+                            600: '#0d9488',
+                            700: '#0f766e',
+                            800: '#115e59',
+                            900: '#134e4a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Kustomisasi scrollbar & transisi halus */
+        body {
+            background-color: #f8fafc;
+            background-image: radial-gradient(#cbd5e1 0.85px, transparent 0.85px);
+            background-size: 24px 24px;
+        }
+        .fade-in {
+            animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .option-btn {
+            transition: all 0.2s ease;
+        }
+        .option-btn:not(:disabled):hover {
+            transform: translateX(4px);
+        }
+    </style>
+</head>
+<body class="text-slate-800 antialiased min-h-screen flex flex-col justify-between selection:bg-teal-200 selection:text-teal-900">
+
+    <!-- Header / Navbar -->
+    <header class="bg-white/90 backdrop-blur-md border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <!-- Ikon DNA SVG -->
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center text-white shadow-md shadow-teal-500/20">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M2 15c6.667-6 13.333 0 20-6"/>
+                        <path d="M9 22c1.798-1.998 2.518-3.995 2.807-5.993"/>
+                        <path d="M15 2c-1.798 1.998-2.518 3.995-2.807 5.993"/>
+                        <path d="m17 6-2.5-2.5"/>
+                        <path d="m14 8-1-1"/>
+                        <path d="m7 18 2.5 2.5"/>
+                        <path d="m3.5 14.5.5.5"/>
+                        <path d="m20 9 .5.5"/>
+                        <path d="m6.5 12.5 1 1"/>
+                        <path d="m16.5 10.5 1 1"/>
+                        <path d="m10 16 1.5 1.5"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="font-bold text-slate-900 text-base sm:text-lg leading-tight">BioQuiz Pro</h1>
+                    <p class="text-xs text-slate-500 font-medium">Evaluasi Pembelajaran Bioteknologi</p>
+                </div>
+            </div>
+
+            <!-- Timer Badge (Tampil saat kuis berlangsung) -->
+            <div id="header-timer-container" class="hidden items-center gap-2 bg-slate-100 border border-slate-200 px-3.5 py-1.5 rounded-full transition-colors duration-300">
+                <svg xmlns="http://www.w3.org/2000/svg" id="timer-icon" class="w-4 h-4 text-teal-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <polyline points="12 6 12 12 16 14"/>
+                </svg>
+                <span id="timer-display" class="font-mono font-bold text-sm sm:text-base text-slate-800">20:00</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-grow max-w-4xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-10">
+
+        <!-- ========================================================= -->
+        <!-- 1. LAYAR AWAL (START SCREEN)                              -->
+        <!-- ========================================================= -->
+        <section id="start-screen" class="fade-in bg-white rounded-3xl shadow-xl shadow-slate-200/60 border border-slate-200/80 overflow-hidden">
+            <div class="bg-gradient-to-r from-teal-700 via-teal-600 to-emerald-600 px-6 py-8 sm:px-10 sm:py-12 text-white relative overflow-hidden">
+                <!-- Dekorasi Latar -->
+                <div class="absolute -right-10 -top-10 w-48 h-48 rounded-full bg-white/10 blur-2xl pointer-events-none"></div>
+                <div class="absolute right-20 -bottom-12 w-36 h-36 rounded-full bg-emerald-300/15 blur-xl pointer-events-none"></div>
+                
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-white/15 text-teal-50 backdrop-blur-sm mb-4 border border-white/20">
+                    <span class="w-2 h-2 rounded-full bg-emerald-300 animate-pulse"></span>
+                    Modul Biologi • Kelas XII / Umum
+                </span>
+                <h2 class="text-2xl sm:text-4xl font-extrabold tracking-tight mb-3">
+                    Kuis Komprehensif Bioteknologi
+                </h2>
+                <p class="text-teal-50/90 text-sm sm:text-base max-w-2xl leading-relaxed">
+                    Uji pemahaman Anda mengenai penerapan prinsip-prinsip biologi mulai dari teknik fermentasi konvensional hingga rekayasa genetika modern dan bioetika.
+                </p>
+            </div>
+
+            <div class="p-6 sm:p-10 space-y-8">
+                <!-- Info Aturan Main -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 flex items-start gap-3.5">
+                        <div class="p-2.5 rounded-xl bg-teal-100 text-teal-700 shrink-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-slate-900 text-sm">20 Soal Pilihan Ganda</h3>
+                            <p class="text-xs text-slate-500 mt-0.5 leading-relaxed">Mencakup bioteknologi konvensional & modern.</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 flex items-start gap-3.5">
+                        <div class="p-2.5 rounded-xl bg-amber-100 text-amber-700 shrink-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-slate-900 text-sm">Waktu 20 Menit</h3>
+                            <p class="text-xs text-slate-500 mt-0.5 leading-relaxed">Penghitung mundur otomatis. Selesai otomatis saat waktu habis.</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 flex items-start gap-3.5">
+                        <div class="p-2.5 rounded-xl bg-emerald-100 text-emerald-700 shrink-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-slate-900 text-sm">Umpan Balik Langsung</h3>
+                            <p class="text-xs text-slate-500 mt-0.5 leading-relaxed">Koreksi instan dan pembahasan ilmiah di setiap nomor.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Input Nama & Opsi -->
+                <div class="bg-teal-50/60 border border-teal-100 rounded-2xl p-5 sm:p-6 space-y-4">
+                    <div>
+                        <label for="participant-name" class="block text-sm font-semibold text-slate-800 mb-1.5">
+                            Nama Peserta <span class="text-slate-400 font-normal">(Opsional)</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            id="participant-name" 
+                            placeholder="Masukkan nama lengkap atau nama panggilan Anda..." 
+                            maxlength="50"
+                            class="w-full px-4 py-3 rounded-xl bg-white border border-slate-300 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition text-sm sm:text-base"
+                        >
+                    </div>
+
+                    <div class="flex items-center justify-between pt-1">
+                        <label class="inline-flex items-center gap-2.5 cursor-pointer select-none">
+                            <input type="checkbox" id="shuffle-toggle" class="w-4 h-4 rounded text-teal-600 focus:ring-teal-500 border-slate-300">
+                            <span class="text-sm text-slate-700 font-medium">Acak urutan soal saat memulai</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Tombol Mulai -->
+                <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
+                    <p class="text-xs text-slate-500 text-center sm:text-left">
+                        Setiap jawaban benar bernilai <strong class="text-slate-700">5 poin</strong> (Skor maksimal 100).
+                    </p>
+                    <button 
+                        id="start-btn" 
+                        type="button"
+                        class="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-2xl bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white font-bold text-base shadow-lg shadow-teal-600/25 hover:shadow-xl hover:shadow-teal-600/30 transition-all active:scale-[0.98] cursor-pointer"
+                    >
+                        <span>Mulai Kuis Sekarang</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- 2. ANTARMUKA KUIS (QUIZ SCREEN)                           -->
+        <!-- ========================================================= -->
+        <section id="quiz-screen" class="hidden fade-in space-y-6">
+            <!-- Progress Bar & Status Soal -->
+            <div class="bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-slate-200/80">
+                <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+                    <div class="flex items-center gap-2">
+                        <span id="question-counter" class="text-sm sm:text-base font-bold text-slate-900">
+                            Soal 1 dari 20
+                        </span>
+                        <span id="question-category" class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-teal-50 text-teal-700 border border-teal-200">
+                            Bioteknologi Konvensional
+                        </span>
+                    </div>
+                    <div class="text-xs sm:text-sm font-semibold text-slate-500">
+                        Skor Sementara: <span id="live-score" class="text-teal-600 font-bold">0</span>
+                    </div>
+                </div>
+                <!-- Bar Visual -->
+                <div class="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden">
+                    <div id="progress-bar" class="h-full bg-gradient-to-r from-teal-500 to-emerald-500 rounded-full transition-all duration-500 ease-out" style="width: 5%"></div>
+                </div>
+            </div>
+
+            <!-- Kartu Pertanyaan & Opsi -->
+            <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-xl shadow-slate-200/50 border border-slate-200/80">
+                <!-- Teks Soal -->
+                <h2 id="question-text" class="text-lg sm:text-xl font-bold text-slate-900 leading-relaxed mb-6">
+                    Memuat pertanyaan...
+                </h2>
+
+                <!-- Pilihan Jawaban (A, B, C, D) -->
+                <div id="options-container" class="space-y-3">
+                    <!-- Opsi di-generate via JavaScript -->
+                </div>
+
+                <!-- Kotak Umpan Balik & Pembahasan (Muncul setelah menjawab) -->
+                <div id="explanation-box" class="hidden mt-6 rounded-2xl p-5 border transition-all duration-300">
+                    <div class="flex items-start gap-3">
+                        <div id="feedback-icon" class="mt-0.5 shrink-0"></div>
+                        <div class="space-y-1.5 flex-grow">
+                            <h3 id="feedback-title" class="font-bold text-base"></h3>
+                            <div class="text-sm text-slate-700 leading-relaxed">
+                                <span class="font-semibold text-slate-900">Pembahasan:</span>
+                                <span id="explanation-text"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Navigasi Bawah Kartu -->
+                <div class="mt-8 pt-5 border-t border-slate-100 flex items-center justify-between gap-4">
+                    <span id="answer-hint" class="text-xs sm:text-sm text-slate-400 italic">
+                        Pilih salah satu jawaban di atas untuk melihat pembahasan.
+                    </span>
+                    <button 
+                        id="next-btn" 
+                        type="button"
+                        class="hidden ml-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-semibold text-sm sm:text-base shadow-md shadow-teal-600/20 transition-all active:scale-[0.98] cursor-pointer"
+                    >
+                        <span id="next-btn-text">Soal Berikutnya</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- 3. HALAMAN REKAPITULASI HASIL AKHIR (RESULTS SCREEN)      -->
+        <!-- ========================================================= -->
+        <section id="result-screen" class="hidden fade-in space-y-8">
+            <!-- Kartu Ringkasan Skor -->
+            <div class="bg-white rounded-3xl shadow-xl shadow-slate-200/60 border border-slate-200/80 overflow-hidden">
+                <div class="bg-gradient-to-br from-slate-900 via-teal-900 to-emerald-900 px-6 py-8 sm:px-10 sm:py-10 text-white text-center relative overflow-hidden">
+                    <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:16px_16px]"></div>
+                    
+                    <p id="time-up-banner" class="hidden inline-block px-3.5 py-1 rounded-full bg-rose-500/20 border border-rose-400/40 text-rose-200 text-xs font-semibold mb-3">
+                        ⏱ Waktu Pengerjaan Telah Habis
+                    </p>
+                    <h2 class="text-xl sm:text-2xl font-bold text-teal-100">
+                        Hasil Evaluasi Kuis Bioteknologi
+                    </h2>
+                    <p id="result-participant" class="text-sm sm:text-base text-teal-200/80 mt-1">
+                        Peserta: Tamu
+                    </p>
+
+                    <!-- Lingkaran Skor -->
+                    <div class="my-6 inline-flex flex-col items-center justify-center w-36 h-36 sm:w-40 sm:h-40 rounded-full bg-white/10 backdrop-blur-md border-4 border-emerald-400/60 shadow-2xl">
+                        <span class="text-xs uppercase tracking-widest text-teal-200 font-semibold">Skor Akhir</span>
+                        <span id="final-score" class="text-4xl sm:text-5xl font-extrabold text-white mt-1">0</span>
+                        <span class="text-xs text-teal-200/80 mt-0.5">dari 100</span>
+                    </div>
+
+                    <!-- Predikat & Pesan Apresiasi -->
+                    <div class="max-w-xl mx-auto">
+                        <span id="grade-badge" class="inline-block px-4 py-1 rounded-full text-xs sm:text-sm font-bold uppercase tracking-wide bg-emerald-500 text-white mb-2">
+                            Sangat Baik
+                        </span>
+                        <p id="grade-message" class="text-sm sm:text-base text-slate-200 leading-relaxed">
+                            Luar biasa! Penguasaan konsep bioteknologi Anda sangat komprehensif.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Statistik Detail -->
+                <div class="p-6 sm:p-8">
+                    <div class="grid grid-cols-3 gap-3 sm:gap-6 text-center">
+                        <div class="bg-emerald-50/70 border border-emerald-200/80 rounded-2xl p-4">
+                            <div class="text-2xl sm:text-3xl font-extrabold text-emerald-600" id="stat-correct">0</div>
+                            <div class="text-xs sm:text-sm font-semibold text-emerald-900 mt-1">Jawaban Benar</div>
+                        </div>
+                        <div class="bg-rose-50/70 border border-rose-200/80 rounded-2xl p-4">
+                            <div class="text-2xl sm:text-3xl font-extrabold text-rose-600" id="stat-wrong">0</div>
+                            <div class="text-xs sm:text-sm font-semibold text-rose-900 mt-1">Salah / Kosong</div>
+                        </div>
+                        <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-4">
+                            <div class="text-xl sm:text-3xl font-extrabold text-slate-800 font-mono" id="stat-time">00:00</div>
+                            <div class="text-xs sm:text-sm font-semibold text-slate-600 mt-1">Durasi Waktu</div>
+                        </div>
+                    </div>
+
+                    <!-- Tombol Aksi Ulangi -->
+                    <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
+                        <button 
+                            id="restart-btn" 
+                            type="button"
+                            class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-2xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-sm sm:text-base shadow-lg shadow-teal-600/20 transition-all active:scale-[0.98] cursor-pointer"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+                            <span>Ulangi Kuis</span>
+                        </button>
+                        <button 
+                            id="restart-shuffle-btn" 
+                            type="button"
+                            class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-sm sm:text-base border border-slate-300 transition-all active:scale-[0.98] cursor-pointer"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
+                            <span>Ulangi & Acak Soal</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tinjauan (Review) Seluruh 20 Soal -->
+            <div class="space-y-4">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-1">
+                    <div>
+                        <h3 class="text-lg sm:text-xl font-bold text-slate-900">Tinjauan Jawaban & Pembahasan Lengkap</h3>
+                        <p class="text-xs sm:text-sm text-slate-500">Pelajari kembali seluruh 20 soal beserta kunci jawaban dan penjelasannya.</p>
+                    </div>
+                    <!-- Filter Tinjauan -->
+                    <div class="inline-flex rounded-xl bg-slate-200/70 p-1 self-start">
+                        <button type="button" data-filter="all" class="filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-white text-slate-900 shadow-sm transition">Semua (20)</button>
+                        <button type="button" data-filter="correct" class="filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 transition">Benar</button>
+                        <button type="button" data-filter="wrong" class="filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 transition">Salah</button>
+                    </div>
+                </div>
+
+                <div id="review-list" class="space-y-4">
+                    <!-- Item tinjauan di-generate via JavaScript -->
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-200 bg-white/80 py-5 mt-12">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-500">
+            <p>© 2026 BioQuiz Pro — Media Pembelajaran Interaktif Bioteknologi</p>
+            <p>Konvensional • Rekayasa Genetika • Bioetika</p>
+        </div>
+    </footer>
+
+    <!-- ========================================================= -->
+    <!-- LOGIKA JAVASCRIPT & BANK 20 SOAL BIOTEKNOLOGI             -->
+    <!-- ========================================================= -->
+    <script>
+        // Bank 20 Soal Bioteknologi Komprehensif
+        const QUIZ_BANK = [
+            {
+                id: 1,
+                category: "Bioteknologi Konvensional",
+                question: "Pada proses pembuatan tempe, kapang Rhizopus oryzae berperan penting dalam mengubah kedelai menjadi produk yang lebih mudah dicerna. Mekanisme biokimia utama yang terjadi selama fermentasi tersebut adalah...",
+                options: [
+                    "Mengubah glukosa menjadi etanol dan gas karbon dioksida dalam kondisi anaerob",
+                    "Menghasilkan enzim protease dan amilase yang menghidrolisis protein serta pati kompleks menjadi molekul sederhana",
+                    "Mengoksidasi alkohol menjadi asam asetat sehingga menurunkan pH substrat",
+                    "Mengikat nitrogen bebas di udara untuk meningkatkan kadar lemak jenuh kedelai"
+                ],
+                correctIndex: 1,
+                explanation: "Kapang Rhizopus oryzae tumbuh membentuk miselium yang mengikat biji kedelai sekaligus menyekresikan enzim ekstraseluler seperti protease, lipase, dan amilase. Enzim-enzim ini memecah makromolekul (protein menjadi asam amino/peptida) sehingga tempe jauh lebih mudah dicerna dan bernilai gizi tinggi."
+            },
+            {
+                id: 2,
+                category: "Bioteknologi Konvensional",
+                question: "Dalam pembuatan yoghurt, susu difermentasi menggunakan kombinasi bakteri Lactobacillus bulgaricus dan Streptococcus thermophilus. Perubahan tekstur susu menjadi kental dan berasa asam disebabkan oleh...",
+                options: [
+                    "Penggumpalan protein kasein akibat penurunan pH dari pembentukan asam laktat",
+                    "Pemecahan laktosa menjadi gas metana dan alkohol oleh enzim zimase",
+                    "Denaturasi lemak susu akibat suhu inkubasi di atas 80°C",
+                    "Pembentukan miselium bakteri yang menjebak molekul air di dalam susu"
+                ],
+                correctIndex: 0,
+                explanation: "Bakteri asam laktat memfermentasi gula susu (laktosa) menjadi asam laktat. Akumulasi asam laktat menurunkan pH susu hingga mencapai titik isoelektrik kasein (~pH 4,6), menyebabkan protein kasein terkoagulasi (menggumpal) membentuk tekstur kental khas yoghurt."
+            },
+            {
+                id: 3,
+                category: "Bioteknologi Konvensional",
+                question: "Pada industri pembuatan keju, enzim renet (kimosin) ditambahkan ke dalam susu yang telah diasamkan. Fungsi spesifik enzim renet dalam tahapan tersebut adalah...",
+                options: [
+                    "Menghambat pertumbuhan bakteri patogen selama proses pemeraman keju",
+                    "Memberikan aroma khas biru kehijauan pada keju jenis Roquefort",
+                    "Memotong ikatan peptida spesifik pada kappa-kasein sehingga terbentuk dadih (curd) dan air dadih (whey)",
+                    "Mengubah galaktosa menjadi glukosa agar rasa keju lebih manis"
+                ],
+                correctIndex: 2,
+                explanation: "Renet mengandung enzim protease kimosin yang memutus rantai kappa-kasein penstabil misel susu. Akibatnya, misel kasein bergabung membentuk gumpalan padat yang disebut dadih (curd) dan terpisah dari cairan whey."
+            },
+            {
+                id: 4,
+                category: "Bioteknologi Konvensional",
+                question: "Adonan roti yang dicampur ragi Saccharomyces cerevisiae akan mengembang setelah didiamkan beberapa saat, dan aroma alkoholnya hilang saat dipanggang. Senyawa utama yang membuat adonan roti mengembang adalah...",
+                options: [
+                    "Gas oksigen (O2) hasil respirasi aerob sel ragi",
+                    "Gas karbon dioksida (CO2) hasil fermentasi alkohol yang terperangkap jaringan gluten",
+                    "Uap etanol yang mendidih pada suhu ruang sebelum pemanggangan",
+                    "Gas hidrogen (H2) hasil pemecahan asam amino tepung terigu"
+                ],
+                correctIndex: 1,
+                explanation: "Saccharomyces cerevisiae melakukan fermentasi alkohol (anaerob) yang mengubah glukosa menjadi etanol dan gas karbon dioksida (CO2). Gelembung gas CO2 terperangkap di dalam jaringan elastis gluten tepung sehingga adonan mengembang, sementara etanol menguap saat dipanggang."
+            },
+            {
+                id: 5,
+                category: "Prinsip Dasar Bioteknologi",
+                question: "Perbedaan mendasar antara bioteknologi konvensional dan bioteknologi modern terletak pada...",
+                options: [
+                    "Bioteknologi konvensional hanya menghasilkan produk pangan, sedangkan modern hanya menghasilkan obat-obatan",
+                    "Bioteknologi konvensional memanfaatkan mikroorganisme utuh secara langsung, sedangkan modern melibatkan manipulasi materi genetik (DNA) atau sel secara terarah",
+                    "Bioteknologi konvensional tidak memerlukan kondisi steril, sedangkan modern selalu dilakukan di alam terbuka",
+                    "Bioteknologi konvensional menggunakan virus sebagai agen utama, sedangkan modern menggunakan jamur"
+                ],
+                correctIndex: 1,
+                explanation: "Bioteknologi konvensional mengandalkan proses metabolisme alami mikroorganisme utuh (seperti fermentasi) tanpa mengubah susunan genetiknya. Sebaliknya, bioteknologi modern memanfaatkan prinsip biologi molekuler untuk memanipulasi DNA/gen atau merekayasa sel secara presisi."
+            },
+            {
+                id: 6,
+                category: "Rekayasa Genetika",
+                question: "Dalam teknologi DNA rekombinan, terdapat dua jenis enzim utama yang berperan sebagai 'gunting molekuler' dan 'lem molekuler'. Pasangan enzim yang tepat secara berurutan adalah...",
+                options: [
+                    "DNA polimerase dan RNA primase",
+                    "Endonuklease restriksi dan DNA ligase",
+                    "Helikase dan topoisomerase",
+                    "Transkriptase balik dan selulase"
+                ],
+                correctIndex: 1,
+                explanation: "Enzim endonuklease restriksi mengenali urutan basa spesifik pada DNA dan memotongnya (gunting molekuler), sedangkan enzim DNA ligase menyambungkan kembali ikatan fosfodiester antarfragmen DNA (lem molekuler)."
+            },
+            {
+                id: 7,
+                category: "Rekayasa Genetika",
+                question: "Produksi hormon insulin manusia secara massal menggunakan bakteri Escherichia coli memanfaatkan struktur DNA sirkuler ekstrakromosomal pada bakteri sebagai vektor pembawa gen insulin. Struktur yang dimaksud adalah...",
+                options: [
+                    "Kapsid",
+                    "Ribosom 70S",
+                    "Plasmid",
+                    "Mesosom"
+                ],
+                correctIndex: 2,
+                explanation: "Plasmid adalah molekul DNA sirkuler kecil di luar kromosom utama bakteri yang mampu bereplikasi secara mandiri. Sifat ini menjadikan plasmid vektor kloning yang ideal untuk menyisipkan gen target (seperti gen insulin manusia) ke dalam sel bakteri."
+            },
+            {
+                id: 8,
+                category: "Rekayasa Genetika",
+                question: "Mengapa para ilmuwan menggunakan cDNA (complementary DNA) yang disintesis dari mRNA matang, alih-alih menggunakan DNA genomik manusia secara langsung, saat menyisipkan gen insulin ke dalam bakteri E. coli?",
+                options: [
+                    "Karena bakteri E. coli tidak memiliki enzim untuk membuang bagian intron pada gen eukariotik",
+                    "Karena DNA genomik manusia berukuran terlalu kecil untuk masuk ke dalam sel bakteri",
+                    "Karena mRNA matang memiliki lebih banyak promotor dibandingkan DNA genomik",
+                    "Karena cDNA tidak memerlukan enzim ligase untuk bergabung dengan plasmid bakteri"
+                ],
+                correctIndex: 0,
+                explanation: "Gen eukariotik (manusia) mengandung bagian non-kode yang disebut intron, sedangkan organisme prokariotik (bakteri) tidak memiliki mekanisme RNA splicing untuk membuang intron tersebut. Dengan membuat cDNA dari mRNA matang menggunakan enzim reverse transcriptase, gen yang disisipkan hanya berisi ekson yang siap diterjemahkan bakteri."
+            },
+            {
+                id: 9,
+                category: "Kultur Jaringan",
+                question: "Teknik kultur jaringan tumbuhan (micropropagation) memungkinkan perbanyakan tanaman dalam jumlah besar dan seragam dari sebagian kecil jaringan (eksplan). Dasar teori biologi yang mendasari keberhasilan teknik ini adalah...",
+                options: [
+                    "Metagenesis",
+                    "Totipotensi sel",
+                    "Diferensiasi permanen",
+                    "Mutasi somatik"
+                ],
+                correctIndex: 1,
+                explanation: "Totipotensi adalah kemampuan setiap sel tumbuhan hidup yang memiliki informasi genetik lengkap untuk membelah dan berdiferensiasi kembali menjadi individu tumbuhan baru yang utuh apabila ditempatkan pada medium dan kondisi hormon yang sesuai."
+            },
+            {
+                id: 10,
+                category: "Kultur Jaringan",
+                question: "Dalam medium kultur jaringan tumbuhan, perbandingan konsentrasi hormon auksin dan sitokinin sangat menentukan arah pertumbuhan eksplan. Jika konsentrasi sitokinin dibuat jauh lebih tinggi daripada auksin, maka eksplan akan cenderung membentuk...",
+                options: [
+                    "Akar adventif yang panjang",
+                    "Tunas dan daun (organogenesis pucuk)",
+                    "Dormansi biji yang berkepanjangan",
+                    "Gugurnya jaringan kalus secara serentak"
+                ],
+                correctIndex: 1,
+                explanation: "Interaksi hormon tumbuhan (ZPT) dalam kultur jaringan mengikuti aturan Skoog & Miller: rasio sitokinin tinggi terhadap auksin merangsang pembentukan tunas (shoot), rasio auksin tinggi merangsang perakaran (root), sedangkan konsentrasi seimbang merangsang pembentukan massa sel belum terdiferensiasi (kalus)."
+            },
+            {
+                id: 11,
+                category: "Kloning & Reproduksi",
+                question: "Domba Dolly (1996) merupakan mamalia pertama yang berhasil dikloning dari sel somatik dewasa melalui teknik Somatic Cell Nuclear Transfer (SCNT). Jika sel kelenjar ambing diambil dari domba Finn Dorset (wajah putih) dan sel telur berinti kosong berasal dari domba Scottish Blackface (wajah hitam), maka sifat genetik Domba Dolly adalah...",
+                options: [
+                    "Identik secara genetik dengan domba Scottish Blackface pendonor sel telur",
+                    "Perpaduan 50% sifat Finn Dorset dan 50% sifat Scottish Blackface",
+                    "Identik secara genetik dengan domba Finn Dorset pendonor inti sel somatik",
+                    "Identik dengan domba induk pengganti (surrogate mother) tempat embrio berkembang"
+                ],
+                correctIndex: 2,
+                explanation: "Pada teknik SCNT, inti sel (nukleus) yang mengandung hampir seluruh materi genetik (DNA) berasal dari sel somatik domba Finn Dorset. Oleh karena itu, secara genetik dan fenotipik (berwajah putih), Domba Dolly adalah klon identik dari pendonor inti sel tersebut."
+            },
+            {
+                id: 12,
+                category: "Diagnostik Molekuler",
+                question: "Teknik Polymerase Chain Reaction (PCR) digunakan secara luas untuk memperbanyak fragmen DNA spesifik secara in vitro, termasuk untuk mendeteksi materi genetik patogen. Penggunaan enzim Taq polimerase dalam mesin PCR sangat krusial karena...",
+                options: [
+                    "Mampu menyambung fragmen RNA tanpa memerlukan primer",
+                    "Bersifat termostabil sehingga tidak terdenaturasi pada suhu tinggi (~95°C) saat tahap denaturasi DNA",
+                    "Dapat memotong rantai ganda DNA pada suhu rendah 4°C",
+                    "Mengubah molekul protein virus langsung menjadi rantai DNA"
+                ],
+                correctIndex: 1,
+                explanation: "Taq polimerase diisolasi dari bakteri termofilik Thermus aquaticus yang hidup di sumber air panas. Sifat tahan panasnya memungkinkan enzim ini tetap aktif melewati siklus pemanasan berulang hingga 94–95°C selama proses pemisahan untai DNA (denaturasi) di mesin thermal cycler."
+            },
+            {
+                id: 13,
+                category: "Bioteknologi Kedokteran",
+                question: "Antibodi monoklonal memiliki spesifisitas sangat tinggi terhadap satu jenis epitop antigen tertentu sehingga efektif untuk terapi kanker dan kit diagnostik. Sel hibridoma yang digunakan untuk memproduksi antibodi monoklonal merupakan hasil fusi antara...",
+                options: [
+                    "Sel limfosit T dan sel eritrosit",
+                    "Sel limfosit B penghasil antibodi spesifik dan sel mieloma (sel kanker) yang mampu membelah terus-menerus",
+                    "Sel makrofag dan sel punca embrionik",
+                    "Sel neutrofil dan bakteri Escherichia coli yang dilemahkan"
+                ],
+                correctIndex: 1,
+                explanation: "Teknologi hibridoma menggabungkan keunggulan sel limfosit B (mampu memproduksi antibodi spesifik namun berumur pendek di kultur) dengan sel mieloma (sel tumor sumsum tulang yang imortal/membelah tak terbatas), menghasilkan sel hibridoma yang memproduksi antibodi monoklonal secara kontinu."
+            },
+            {
+                id: 14,
+                category: "Bioteknologi Reproduksi",
+                question: "Program bayi tabung atau In Vitro Fertilization (IVF) merupakan solusi medis bagi pasangan dengan gangguan kesuburan tertentu. Prinsip kerja utama dari teknologi IVF adalah...",
+                options: [
+                    "Menyuntikkan gen kesuburan baru ke dalam ovarium ibu sebelum ovulasi",
+                    "Mempertemukan sel sperma dan sel ovum di luar tubuh (cawan laboratorium) hingga terbentuk embrio yang kemudian ditransfer ke rahim",
+                    "Mengganti seluruh inti sel telur ibu dengan inti sel somatik ayah",
+                    "Membiakkan janin sepenuhnya di dalam inkubator buatan hingga siap dilahirkan"
+                ],
+                correctIndex: 1,
+                explanation: "In Vitro Fertilization (IVF) berarti pembuahan di dalam kaca/laboratorium. Sel telur matang diambil dari ovarium dan dibuahi oleh sperma di medium kultur khusus. Setelah zigot berkembang menjadi embrio tahap awal (blastokista), embrio ditanamkan kembali ke dalam rahim ibu untuk berkembang secara alami."
+            },
+            {
+                id: 15,
+                category: "Organisme Transgenik",
+                question: "Tanaman jagung Bt dan kapas Bt merupakan tanaman transgenik yang tahan terhadap serangan hama serangga (seperti penggerek batang) tanpa penyemprotan insektisida kimia berlebih. Gen ketahanan tersebut disisipkan dari bakteri tanah...",
+                options: [
+                    "Agrobacterium tumefaciens",
+                    "Bacillus thuringiensis",
+                    "Rhizobium leguminosarum",
+                    "Pseudomonas putida"
+                ],
+                correctIndex: 1,
+                explanation: "Bakteri Bacillus thuringiensis menghasilkan protein kristal endotoksin (toksin Bt). Ketika larva serangga hama memakan jaringan tanaman transgenik yang mengekspresikan gen Bt, toksin ini aktif di saluran pencernaan serangga yang bersifat basa dan merusak dinding ususnya, namun aman bagi manusia dan mamalia yang lambungnya asam."
+            },
+            {
+                id: 16,
+                category: "Organisme Transgenik",
+                question: "Pengembangan padi transgenik 'Golden Rice' bertujuan untuk mengatasi masalah defisiensi mikronutrien yang menyebabkan kebutaan pada anak-anak di negara berkembang. Bulir padi Golden Rice berwarna kuning keemasan karena mengandung kadar tinggi...",
+                options: [
+                    "Asam folat (Vitamin B9)",
+                    "Beta-karoten (prekursor Vitamin A)",
+                    "Kalsiferol (Vitamin D)",
+                    "Asam askorbat (Vitamin C)"
+                ],
+                correctIndex: 1,
+                explanation: "Golden Rice direkayasa dengan menyisipkan gen penyandi enzim fitoena sintase (dari tanaman bakung/jagung) dan karotena desaturase (dari bakteri Erwinia uredovora) sehingga endosperma bulir padi mampu mensintesis beta-karoten yang akan diubah tubuh manusia menjadi Vitamin A."
+            },
+            {
+                id: 17,
+                category: "Penyuntingan Genom Modern",
+                question: "Teknologi penyuntingan genom CRISPR-Cas9 merevolusi riset bioteknologi modern karena presisi dan efisiensinya yang tinggi dibandingkan metode lama. Dalam sistem CRISPR-Cas9, fungsi komponen gRNA (guide RNA) adalah...",
+                options: [
+                    "Memotong rantai ganda DNA target secara langsung tanpa bantuan protein lain",
+                    "Menuntun enzim endonuklease Cas9 menuju urutan basa DNA spesifik yang komplementer untuk dipotong",
+                    "Menyambung kembali untai DNA yang putus agar tidak terjadi mutasi",
+                    "Menggandakan jumlah kromosom di dalam inti sel target"
+                ],
+                correctIndex: 1,
+                explanation: "Sistem CRISPR-Cas9 terdiri dari dua komponen kunci: guide RNA (gRNA) yang dirancang memiliki urutan basa komplementer dengan gen target sebagai 'penunjuk arah', serta protein Cas9 yang bertindak sebagai 'gunting nuklease' pemotong untai ganda DNA di lokasi yang ditunjuk gRNA."
+            },
+            {
+                id: 18,
+                category: "Bioteknologi Lingkungan",
+                question: "Ketika terjadi tumpahan minyak mentah (hidrokarbon) di perairan laut, para ahli lingkungan sering menerapkan teknik bioremediasi menggunakan bakteri seperti Pseudomonas putida atau Alcanivorax borkumensis. Mekanisme kerja bioremediasi tersebut adalah...",
+                options: [
+                    "Bakteri menyerap minyak ke dalam tubuhnya lalu mengendapkannya ke dasar palung laut",
+                    "Bakteri menggunakan senyawa hidrokarbon minyak sebagai sumber karbon dan energi serta menguraikannya menjadi CO2 dan air yang tidak berbahaya",
+                    "Bakteri mengubah minyak mentah menjadi plastik biodegradable secara spontan",
+                    "Bakteri membekukan permukaan minyak sehingga mudah diangkat menggunakan jaring"
+                ],
+                correctIndex: 1,
+                explanation: "Bioremediasi memanfaatkan kemampuan metabolisme mikroorganisme (bakteri hidrokarbonoklastik) untuk mendegradasi polutan organik berbahaya (seperti hidrokarbon minyak bumi) menjadi senyawa sederhana yang ramah lingkungan seperti karbon dioksida (CO2), air (H2O), dan biomassa sel."
+            },
+            {
+                id: 19,
+                category: "Bioteknologi Pertambangan",
+                question: "Dalam industri pertambangan modern, teknik bioleaching (biometalurgi) memanfaatkan bakteri kemoautotrof seperti Acidithiobacillus ferrooxidans untuk mengekstrak logam tembaga dari bijih berkadar rendah secara lebih ramah lingkungan. Peran bakteri tersebut adalah...",
+                options: [
+                    "Menyerap logam tembaga murni ke dalam dinding selnya hingga mengkristal",
+                    "Mengoksidasi senyawa besi (Fe2+) dan sulfur pada bijih sulfida sehingga menghasilkan asam sulfat yang melarutkan ion tembaga (Cu2+)",
+                    "Mengubah batuan silikat menjadi logam tembaga melalui reaksi fusi nuklir biologis",
+                    "Mencairkan bijih logam pada suhu ruang menggunakan enzim lipase"
+                ],
+                correctIndex: 1,
+                explanation: "Acidithiobacillus ferrooxidans hidup di lingkungan sangat asam dan memperoleh energi dengan mengoksidasi ion fero (Fe2+) menjadi feri (Fe3+) serta sulfur tereduksi menjadi asam sulfat (H2SO4). Larutan asam dan ion feri ini melarutkan tembaga dari mineral tidak larut (seperti kalkopirit) menjadi ion Cu2+ yang mudah dipanen."
+            },
+            {
+                id: 20,
+                category: "Bioetika & Keamanan Hayati",
+                question: "Penerapan bioteknologi modern seperti tanaman transgenik (GMO) dan penyuntingan gen embrio manusia memicu kajian ketat di bidang bioetika dan keamanan hayati. Berikut ini yang merupakan contoh kekhawatiran ekologis utama dari pelepasan tanaman transgenik tahan herbisida ke alam bebas adalah...",
+                options: [
+                    "Tanaman transgenik akan langsung berubah menjadi hewan herbivora dalam satu generasi",
+                    "Terjadinya aliran gen (gene flow) melalui penyerbukan silang ke gulma kerabat dekat sehingga memicu munculnya 'gulma super' (superweeds)",
+                    "Tanaman transgenik menghentikan siklus air global karena tidak melakukan transpirasi",
+                    "Seluruh mikroorganisme tanah akan punah akibat meningkatnya kadar oksigen di atmosfer"
+                ],
+                correctIndex: 1,
+                explanation: "Salah satu risiko ekologis yang diawasi ketat dalam keamanan hayati (biosafety) adalah perpindahan serbuk sari (pollen) dari tanaman transgenik tahan herbisida ke spesies gulma liar yang berkerabat dekat. Jika terjadi hibridisasi, gulma tersebut dapat mewarisi sifat tahan herbisida dan menjadi sulit dikendalikan (superweeds)."
+            }
+        ];
+
+        // Konfigurasi Kuis
+        const TOTAL_TIME_SECONDS = 20 * 60; // 20 menit
+        const POINTS_PER_QUESTION = 5;
+
+        // State Aplikasi
+        let activeQuestions = [];
+        let currentQuestionIndex = 0;
+        let userAnswers = []; // Menyimpan indeks pilihan user atau null jika kosong
+        let score = 0;
+        let timeRemaining = TOTAL_TIME_SECONDS;
+        let timerInterval = null;
+        let isTimeUp = false;
+        let participantName = "";
+
+        // Referensi Elemen DOM
+        const startScreen = document.getElementById('start-screen');
+        const quizScreen = document.getElementById('quiz-screen');
+        const resultScreen = document.getElementById('result-screen');
+
+        const headerTimerContainer = document.getElementById('header-timer-container');
+        const timerDisplay = document.getElementById('timer-display');
+        const timerIcon = document.getElementById('timer-icon');
+
+        const participantInput = document.getElementById('participant-name');
+        const shuffleToggle = document.getElementById('shuffle-toggle');
+        const startBtn = document.getElementById('start-btn');
+
+        const questionCounter = document.getElementById('question-counter');
+        const questionCategory = document.getElementById('question-category');
+        const liveScore = document.getElementById('live-score');
+        const progressBar = document.getElementById('progress-bar');
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+
+        const explanationBox = document.getElementById('explanation-box');
+        const feedbackIcon = document.getElementById('feedback-icon');
+        const feedbackTitle = document.getElementById('feedback-title');
+        const explanationText = document.getElementById('explanation-text');
+        const answerHint = document.getElementById('answer-hint');
+        const nextBtn = document.getElementById('next-btn');
+        const nextBtnText = document.getElementById('next-btn-text');
+
+        const timeUpBanner = document.getElementById('time-up-banner');
+        const resultParticipant = document.getElementById('result-participant');
+        const finalScoreEl = document.getElementById('final-score');
+        const gradeBadge = document.getElementById('grade-badge');
+        const gradeMessage = document.getElementById('grade-message');
+        const statCorrect = document.getElementById('stat-correct');
+        const statWrong = document.getElementById('stat-wrong');
+        const statTime = document.getElementById('stat-time');
+        const reviewList = document.getElementById('review-list');
+        const restartBtn = document.getElementById('restart-btn');
+        const restartShuffleBtn = document.getElementById('restart-shuffle-btn');
+        const filterButtons = document.querySelectorAll('.filter-btn');
+
+        // Helper: Acak Array (Fisher-Yates Shuffle)
+        function shuffleArray(array) {
+            const cloned = [...array];
+            for (let i = cloned.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [cloned[i], cloned[j]] = [cloned[j], cloned[i]];
+            }
+            return cloned;
+        }
+
+        // Helper: Format Detik ke MM:SS
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+        }
+
+        // Memulai Kuis
+        function startQuiz(shouldShuffle = false) {
+            participantName = participantInput.value.trim() || "Peserta Kuis";
+            activeQuestions = shouldShuffle ? shuffleArray(QUIZ_BANK) : [...QUIZ_BANK];
+            currentQuestionIndex = 0;
+            userAnswers = new Array(activeQuestions.length).fill(null);
+            score = 0;
+            timeRemaining = TOTAL_TIME_SECONDS;
+            isTimeUp = false;
+
+            // Reset UI Header & Layar
+            liveScore.textContent = "0";
+            updateTimerUI();
+            headerTimerContainer.classList.remove('hidden');
+            headerTimerContainer.classList.add('flex');
+
+            startScreen.classList.add('hidden');
+            resultScreen.classList.add('hidden');
+            quizScreen.classList.remove('hidden');
+
+            // Mulai Timer
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timeRemaining--;
+                updateTimerUI();
+
+                if (timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    isTimeUp = true;
+                    finishQuiz();
+                }
+            }, 1000);
+
+            renderQuestion();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Perbarui Tampilan Timer & Peringatan Warna
+        function updateTimerUI() {
+            timerDisplay.textContent = formatTime(Math.max(0, timeRemaining));
+            
+            if (timeRemaining <= 120) { // Sisa <= 2 menit: warna merah peringatan
+                headerTimerContainer.className = "flex items-center gap-2 bg-rose-50 border border-rose-300 px-3.5 py-1.5 rounded-full transition-colors duration-300 animate-pulse";
+                timerDisplay.className = "font-mono font-bold text-sm sm:text-base text-rose-700";
+                timerIcon.className = "w-4 h-4 text-rose-600";
+            } else if (timeRemaining <= 300) { // Sisa <= 5 menit: warna amber
+                headerTimerContainer.className = "flex items-center gap-2 bg-amber-50 border border-amber-300 px-3.5 py-1.5 rounded-full transition-colors duration-300";
+                timerDisplay.className = "font-mono font-bold text-sm sm:text-base text-amber-800";
+                timerIcon.className = "w-4 h-4 text-amber-600";
+            } else {
+                headerTimerContainer.className = "flex items-center gap-2 bg-slate-100 border border-slate-200 px-3.5 py-1.5 rounded-full transition-colors duration-300";
+                timerDisplay.className = "font-mono font-bold text-sm sm:text-base text-slate-800";
+                timerIcon.className = "w-4 h-4 text-teal-600";
+            }
+        }
+
+        // Render Pertanyaan Saat Ini
+        function renderQuestion() {
+            const q = activeQuestions[currentQuestionIndex];
+            const total = activeQuestions.length;
+            const letters = ['A', 'B', 'C', 'D'];
+
+            // Update Progress & Info Soal
+            questionCounter.textContent = `Soal ${currentQuestionIndex + 1} dari ${total}`;
+            questionCategory.textContent = q.category;
+            const progressPercent = ((currentQuestionIndex + 1) / total) * 100;
+            progressBar.style.width = `${progressPercent}%`;
+
+            // Animasi ulang kartu soal
+            questionText.textContent = `${currentQuestionIndex + 1}. ${q.question}`;
+
+            // Sembunyikan pembahasan & tombol lanjut sebelum user memilih
+            explanationBox.classList.add('hidden');
+            nextBtn.classList.add('hidden');
+            answerHint.classList.remove('hidden');
+
+            // Ubah teks tombol pada soal terakhir
+            if (currentQuestionIndex === total - 1) {
+                nextBtnText.textContent = "Lihat Hasil Akhir";
+            } else {
+                nextBtnText.textContent = "Soal Berikutnya";
+            }
+
+            // Render Opsi A, B, C, D
+            optionsContainer.innerHTML = '';
+            q.options.forEach((optText, idx) => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = "option-btn w-full text-left p-4 rounded-2xl border-2 border-slate-200 bg-white hover:border-teal-400 hover:bg-teal-50/40 flex items-start gap-3.5 group cursor-pointer focus:outline-none focus:ring-2 focus:ring-teal-500/40";
+                
+                btn.innerHTML = `
+                    <span class="option-badge w-8 h-8 rounded-xl bg-slate-100 group-hover:bg-teal-100 text-slate-700 group-hover:text-teal-800 font-bold text-sm flex items-center justify-center shrink-0 transition-colors">
+                        ${letters[idx]}
+                    </span>
+                    <span class="option-label text-sm sm:text-base text-slate-800 font-medium leading-snug pt-1 flex-grow">
+                        ${optText}
+                    </span>
+                    <span class="option-status-icon shrink-0 pt-1 hidden"></span>
+                `;
+
+                btn.addEventListener('click', () => handleSelectOption(idx));
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        // Tangani Pemilihan Jawaban & Umpan Balik Langsung
+        function handleSelectOption(selectedIndex) {
+            // Cegah klik ganda jika sudah dijawab
+            if (userAnswers[currentQuestionIndex] !== null) return;
+
+            userAnswers[currentQuestionIndex] = selectedIndex;
+            const q = activeQuestions[currentQuestionIndex];
+            const isCorrect = selectedIndex === q.correctIndex;
+
+            if (isCorrect) {
+                score += POINTS_PER_QUESTION;
+                liveScore.textContent = score;
+            }
+
+            // Perbarui tampilan setiap tombol opsi
+            const optionButtons = optionsContainer.querySelectorAll('.option-btn');
+            optionButtons.forEach((btn, idx) => {
+                btn.disabled = true;
+                btn.classList.remove('hover:border-teal-400', 'hover:bg-teal-50/40', 'cursor-pointer');
+                btn.classList.add('cursor-default');
+
+                const badge = btn.querySelector('.option-badge');
+                const statusIcon = btn.querySelector('.option-status-icon');
+
+                if (idx === q.correctIndex) {
+                    // Tandai Kunci Jawaban Benar (Hijau)
+                    btn.className = "option-btn w-full text-left p-4 rounded-2xl border-2 border-emerald-500 bg-emerald-50/90 flex items-start gap-3.5 shadow-sm";
+                    badge.className = "option-badge w-8 h-8 rounded-xl bg-emerald-600 text-white font-bold text-sm flex items-center justify-center shrink-0";
+                    statusIcon.classList.remove('hidden');
+                    statusIcon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`;
+                } else if (idx === selectedIndex && !isCorrect) {
+                    // Tandai Pilihan User yang Salah (Merah)
+                    btn.className = "option-btn w-full text-left p-4 rounded-2xl border-2 border-rose-500 bg-rose-50/90 flex items-start gap-3.5 shadow-sm";
+                    badge.className = "option-badge w-8 h-8 rounded-xl bg-rose-600 text-white font-bold text-sm flex items-center justify-center shrink-0";
+                    statusIcon.classList.remove('hidden');
+                    statusIcon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-rose-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>`;
+                } else {
+                    // Opsi lainnya dibuat redup
+                    btn.className = "option-btn w-full text-left p-4 rounded-2xl border border-slate-200 bg-slate-50/60 opacity-60 flex items-start gap-3.5";
+                }
+            });
+
+            // Tampilkan Kotak Pembahasan
+            explanationBox.classList.remove('hidden');
+            if (isCorrect) {
+                explanationBox.className = "mt-6 rounded-2xl p-5 border border-emerald-200 bg-emerald-50/70 fade-in";
+                feedbackIcon.innerHTML = `<div class="w-7 h-7 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>`;
+                feedbackTitle.className = "font-bold text-base text-emerald-800";
+                feedbackTitle.textContent = "Tepat Sekali! Jawaban Anda Benar (+5 Poin)";
+            } else {
+                const letters = ['A', 'B', 'C', 'D'];
+                explanationBox.className = "mt-6 rounded-2xl p-5 border border-rose-200 bg-rose-50/70 fade-in";
+                feedbackIcon.innerHTML = `<div class="w-7 h-7 rounded-full bg-rose-100 text-rose-700 flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>`;
+                feedbackTitle.className = "font-bold text-base text-rose-800";
+                feedbackTitle.textContent = `Kurang Tepat! Kunci jawaban yang benar adalah ${letters[q.correctIndex]}.`;
+            }
+
+            explanationText.textContent = q.explanation;
+
+            // Tampilkan Tombol Berikutnya
+            answerHint.classList.add('hidden');
+            nextBtn.classList.remove('hidden');
+        }
+
+        // Lanjut ke Soal Berikutnya atau Selesai
+        function handleNextQuestion() {
+            if (currentQuestionIndex < activeQuestions.length - 1) {
+                currentQuestionIndex++;
+                renderQuestion();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else {
+                finishQuiz();
+            }
+        }
+
+        // Akhiri Kuis & Tampilkan Halaman Rekapitulasi
+        function finishQuiz() {
+            clearInterval(timerInterval);
+            headerTimerContainer.classList.add('hidden');
+            headerTimerContainer.classList.remove('flex');
+
+            quizScreen.classList.add('hidden');
+            resultScreen.classList.remove('hidden');
+
+            // Hitung Statistik
+            let correctCount = 0;
+            activeQuestions.forEach((q, idx) => {
+                if (userAnswers[idx] === q.correctIndex) {
+                    correctCount++;
+                }
+            });
+            const wrongCount = activeQuestions.length - correctCount;
+            const finalScore = correctCount * POINTS_PER_QUESTION;
+            const elapsedSeconds = TOTAL_TIME_SECONDS - Math.max(0, timeRemaining);
+
+            // Banner waktu habis jika berlaku
+            if (isTimeUp) {
+                timeUpBanner.classList.remove('hidden');
+            } else {
+                timeUpBanner.classList.add('hidden');
+            }
+
+            // Isi Data Ringkasan
+            resultParticipant.textContent = `Peserta: ${participantName}`;
+            finalScoreEl.textContent = finalScore;
+            statCorrect.textContent = correctCount;
+            statWrong.textContent = wrongCount;
+            statTime.textContent = formatTime(elapsedSeconds);
+
+            // Evaluasi Predikat Dinamis
+            if (finalScore >= 85) {
+                gradeBadge.textContent = "Sangat Baik (Istimewa)";
+                gradeBadge.className = "inline-block px-4 py-1 rounded-full text-xs sm:text-sm font-bold uppercase tracking-wide bg-emerald-500 text-white mb-2";
+                gradeMessage.textContent = "Luar biasa! Anda menguasai konsep bioteknologi konvensional maupun rekayasa genetika modern dengan sangat mendalam.";
+            } else if (finalScore >= 70) {
+                gradeBadge.textContent = "Baik";
+                gradeBadge.className = "inline-block px-4 py-1 rounded-full text-xs sm:text-sm font-bold uppercase tracking-wide bg-teal-500 text-white mb-2";
+                gradeMessage.textContent = "Kerja bagus! Pemahaman Anda sudah melampaui standar ketuntasan. Tinjau kembali beberapa soal yang keliru untuk hasil sempurna.";
+            } else if (finalScore >= 50) {
+                gradeBadge.textContent = "Cukup";
+                gradeBadge.className = "inline-block px-4 py-1 rounded-full text-xs sm:text-sm font-bold uppercase tracking-wide bg-amber-500 text-white mb-2";
+                gradeMessage.textContent = "Cukup baik, namun beberapa prinsip molekuler dan aplikasi bioteknologi masih perlu diperkuat. Pelajari pembahasan di bawah ini.";
+            } else {
+                gradeBadge.textContent = "Perlu Belajar Lagi";
+                gradeBadge.className = "inline-block px-4 py-1 rounded-full text-xs sm:text-sm font-bold uppercase tracking-wide bg-rose-500 text-white mb-2";
+                gradeMessage.textContent = "Jangan berkecil hati! Gunakan rincian pembahasan seluruh soal di bawah ini sebagai bahan belajar sebelum mencoba mengulangi kuis.";
+            }
+
+            // Reset filter tombol ke "Semua"
+            setActiveFilterButton('all');
+            renderReviewList('all');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Render Daftar Tinjauan 20 Soal
+        function renderReviewList(filter = 'all') {
+            const letters = ['A', 'B', 'C', 'D'];
+            reviewList.innerHTML = '';
+
+            let displayedCount = 0;
+
+            activeQuestions.forEach((q, idx) => {
+                const userAns = userAnswers[idx];
+                const isCorrect = userAns === q.correctIndex;
+
+                if (filter === 'correct' && !isCorrect) return;
+                if (filter === 'wrong' && isCorrect) return;
+
+                displayedCount++;
+
+                const userAnswerText = userAns !== null 
+                    ? `${letters[userAns]}. ${q.options[userAns]}` 
+                    : "Tidak dijawab (Waktu habis)";
+                const correctAnswerText = `${letters[q.correctIndex]}. ${q.options[q.correctIndex]}`;
+
+                const card = document.createElement('div');
+                card.className = `bg-white rounded-2xl p-5 sm:p-6 border ${isCorrect ? 'border-emerald-200/90' : 'border-rose-200/90'} shadow-sm`;
+
+                card.innerHTML = `
+                    <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+                        <div class="flex items-center gap-2">
+                            <span class="px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-100 text-slate-700">
+                                Nomor ${idx + 1}
+                            </span>
+                            <span class="text-xs font-medium text-slate-500">${q.category}</span>
+                        </div>
+                        ${isCorrect 
+                            ? `<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">✓ Benar (+5)</span>`
+                            : `<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-rose-100 text-rose-800">✕ Salah (0)</span>`
+                        }
+                    </div>
+
+                    <p class="font-bold text-slate-900 text-sm sm:text-base leading-relaxed mb-4">
+                        ${q.question}
+                    </p>
+
+                    <div class="space-y-2 text-xs sm:text-sm mb-4">
+                        <div class="p-3 rounded-xl ${isCorrect ? 'bg-emerald-50 text-emerald-900 border border-emerald-200' : 'bg-rose-50 text-rose-900 border border-rose-200'}">
+                            <span class="font-semibold block sm:inline">Jawaban Anda: </span>
+                            <span>${userAnswerText}</span>
+                        </div>
+                        ${!isCorrect ? `
+                        <div class="p-3 rounded-xl bg-emerald-50 text-emerald-900 border border-emerald-200">
+                            <span class="font-semibold block sm:inline">Kunci Jawaban: </span>
+                            <span>${correctAnswerText}</span>
+                        </div>
+                        ` : ''}
+                    </div>
+
+                    <div class="bg-slate-50 border border-slate-200/80 rounded-xl p-3.5 text-xs sm:text-sm text-slate-700 leading-relaxed">
+                        <span class="font-bold text-teal-800">Pembahasan: </span>
+                        ${q.explanation}
+                    </div>
+                `;
+
+                reviewList.appendChild(card);
+            });
+
+            if (displayedCount === 0) {
+                reviewList.innerHTML = `
+                    <div class="bg-white rounded-2xl p-8 text-center border border-slate-200 text-slate-500 text-sm">
+                        Tidak ada soal pada kategori filter ini.
+                    </div>
+                `;
+            }
+        }
+
+        function setActiveFilterButton(activeFilter) {
+            filterButtons.forEach(btn => {
+                if (btn.dataset.filter === activeFilter) {
+                    btn.className = "filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-white text-slate-900 shadow-sm transition";
+                } else {
+                    btn.className = "filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 transition";
+                }
+            });
+        }
+
+        // Event Listeners
+        startBtn.addEventListener('click', () => {
+            startQuiz(shuffleToggle.checked);
+        });
+
+        participantInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                startQuiz(shuffleToggle.checked);
+            }
+        });
+
+        nextBtn.addEventListener('click', handleNextQuestion);
+
+        restartBtn.addEventListener('click', () => {
+            startQuiz(false);
+        });
+
+        restartShuffleBtn.addEventListener('click', () => {
+            startQuiz(true);
+        });
+
+        filterButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const filterType = btn.dataset.filter;
+                setActiveFilterButton(filterType);
+                renderReviewList(filterType);
+            });
+        });
+    </script>
+</body>
+</html>
